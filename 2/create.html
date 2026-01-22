@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friend Or Trend? 2</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('bg1o2.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      backdrop-filter: brightness(0.9);
+    }
+
+    .box {
+      background: rgba(255,255,255,0.2);
+      padding: 30px 50px;
+      border-radius: 15px;
+      backdrop-filter: blur(8px);
+    }
+
+    .logo {
+      width: 260px;
+      max-width: 80%;
+      margin-bottom: 20px;
+      animation: fadeInDown 1s ease-out;
+    }
+
+    #nameInput {
+      margin-top: 10px;
+      padding: 12px 20px;
+      width: 250px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1em;
+      outline: none;
+      text-align: center;
+    }
+
+    .start-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 35px;
+      font-size: 1.1em;
+      font-weight: bold;
+      background: #3b82f6;
+      color: white;
+      border-radius: 40px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all .3s ease;
+    }
+
+    .start-btn:hover {
+      background: #60a5fa;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+    <img src="fotlogo.png" class="logo" alt="logo">
+
+    <h2 style="color:white; margin-bottom:10px;">Enter Your Name</h2>
+    <input id="nameInput" type="text" placeholder="Your Name">
+
+    <div class="start-btn" onclick="startQuestions()">Proceed to test paper</div>
+  </div>
+
+  <!-- Firebase Config -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyaA1svxgvFEgMNsQjQCQRnb5xvdxN7zs",
+      authDomain: "friendortrend.firebaseapp.com",
+      projectId: "friendortrend",
+      storageBucket: "friendortrend.firebasestorage.app",
+      messagingSenderId: "459799712120",
+      appId: "1:459799712120:web:2220249913e4dc91c4b88d",
+      measurementId: "G-SWW3YSJ162"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+
+  <script>
+    function startQuestions() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) {
+        alert("Please enter your name!");
+        return;
+      }
+      localStorage.setItem("creatorName", name);
+      window.location.href = "create/testpaper.html";
+    }
+  </script>
+
+</body>
+</html>

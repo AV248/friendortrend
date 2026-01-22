@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friend Or Trend? 2</title>
+<style>
+  :root {
+    --glass: rgba(255, 255, 255, 0.12);
+    --glass-border: rgba(255, 255, 255, 0.20);
+    --accent: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.45);
+    --highlight: rgba(16, 185, 129, 0.3);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: url('bg1o6.jpeg') center/cover fixed no-repeat;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    color: #f1f5f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logo {
+    width: clamp(200px, 48vw, 280px);
+    margin: 40px auto 24px;
+    filter: drop-shadow(0 12px 32px rgba(0,0,0,0.6));
+    transition: all 0.5s ease;
+    animation: logoPop 1.2s ease-out;
+  }
+
+  @keyframes logoPop {
+    0%   { transform: scale(0.7) translateY(-40px); opacity: 0; }
+    70%  { transform: scale(1.08); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .logo:hover {
+    transform: scale(1.06) translateY(-4px);
+    filter: drop-shadow(0 16px 40px var(--accent-glow));
+  }
+
+  .title {
+    font-size: clamp(2rem, 7vw, 2.8rem);
+    font-weight: 800;
+    margin: 0 0 12px;
+    letter-spacing: -0.5px;
+    text-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    opacity: 0.85;
+    margin: 0 0 32px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+
+  .board {
+    width: 92%;
+    max-width: 720px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 28px 24px;
+    box-shadow: 0 18px 52px rgba(0,0,0,0.55);
+    margin-bottom: 40px;
+    animation: fadeUp 0.7s ease-out;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(36px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.06);
+    transition: all 0.28s ease;
+  }
+
+  .row:hover {
+    background: rgba(255,255,255,0.16);
+    transform: translateY(-2px);
+  }
+
+  .row.me {
+    background: var(--highlight);
+    border: 2px solid rgba(16,185,129,0.7);
+    font-weight: 700;
+  }
+
+  .rank {
+    font-size: 1.35rem;
+    font-weight: 800;
+    min-width: 44px;
+    text-align: center;
+    color: #e2e8f0;
+  }
+
+  .rank-1 { color: #fcd34d; text-shadow: 0 0 12px #fcd34d88; }
+  .rank-2 { color: #e5e7eb; text-shadow: 0 0 12px #e5e7eb88; }
+  .rank-3 { color: #d97706; text-shadow: 0 0 10px #d9770688; }
+
+  .name {
+    flex: 1;
+    font-size: 1.18rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .score {
+    font-size: 1.18rem;
+    font-weight: 700;
+    min-width: 90px;
+    text-align: right;
+    opacity: 0.95;
+  }
+
+  .emoji {
+    font-size: 1.5rem;
+    margin-left: 8px;
+    line-height: 1;
+  }
+
+  .loading {
+    margin-top: 100px;
+    font-size: 1.35rem;
+    font-weight: 600;
+    opacity: 0.8;
+    text-align: center;
+  }
+
+  .cta {
+    margin: 32px auto 60px;
+    padding: 18px 36px;
+    font-size: 1.22rem;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none;
+    border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(59,130,246,0.4);
+    cursor: pointer;
+    transition: all 0.35s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .cta:hover {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 16px 44px rgba(59,130,246,0.55);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  }
+
+  @media (max-width: 480px) {
+    .board { padding: 20px 16px; }
+    .row { padding: 14px 16px; font-size: 0.98rem; }
+    .rank { font-size: 1.2rem; min-width: 36px; }
+    .score { font-size: 1.05rem; min-width: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<img src="fotlogo.png" class="logo" alt="Friend or Trend">
+
+<h1 class="title">Leaderboard</h1>
+<p class="subtitle">Who's the real best friend? 👀</p>
+
+<div id="boardArea" class="board" style="display:none;"></div>
+
+<div id="loading" class="loading">Loading leaderboard...</div>
+
+<a href="https://friendortrend.vercel.app" class="cta">Create Your Own Test →</a>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDyaA1svxgvFEgMNsQjQCQRnb5xvdxN7zs",
+    authDomain: "friendortrend.firebaseapp.com",
+    projectId: "friendortrend",
+    storageBucket: "friendortrend.firebasestorage.app",
+    messagingSenderId: "459799712120",
+    appId: "1:459799712120:web:2220249913e4dc91c4b88d",
+    measurementId: "G-SWW3YSJ162"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const params = new URLSearchParams(location.search);
+  const quizID = params.get("quizID");
+  const me = params.get("player") || null;
+
+  const rankEmojis = [
+    "🏆",  // 1
+    "🥈",  // 2
+    "🥉",  // 3
+    "🔥", "✨", "💫", "⚡", "🌟", "🚀", "💎"  // 4+
+  ];
+
+  async function loadLeaderboard() {
+    try {
+      if (!quizID) throw new Error("No quiz ID");
+
+      const attemptsRef = collection(db, "quizzes", quizID, "attempts");
+      const snap = await getDocs(query(attemptsRef));
+
+      let arr = [];
+      snap.forEach(doc => arr.push(doc.data()));
+
+      if (arr.length === 0) {
+        document.getElementById("loading").textContent = "No attempts yet. Be the first!";
+        return;
+      }
+
+      // Sort: higher score first, then newer attempts if scores equal
+      arr.sort((a, b) => b.score - a.score || b.takenAt - a.takenAt);
+
+      const board = document.getElementById("boardArea");
+      board.innerHTML = "";
+
+      arr.forEach((p, idx) => {
+        const row = document.createElement("div");
+        row.className = "row";
+        if (p.playerName === me) row.classList.add("me");
+
+        const rank = idx + 1;
+        const emoji = rankEmojis[Math.min(rank - 1, rankEmojis.length - 1)];
+
+        row.innerHTML = `
+          <div class="rank rank-${Math.min(rank, 3)}">${rank}</div>
+          <div class="name">
+            ${p.playerName}
+            <span class="emoji">${emoji}</span>
+          </div>
+          <div class="score">${p.score}/${p.total}</div>
+        `;
+
+        board.appendChild(row);
+      });
+
+      document.getElementById("loading").style.display = "none";
+      board.style.display = "block";
+    } catch (e) {
+      document.getElementById("loading").textContent = "Couldn't load leaderboard 😕";
+      console.error(e);
+    }
+  }
+
+  loadLeaderboard();
+</script>
+</body>
+</html>

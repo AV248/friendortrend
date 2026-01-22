@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friend Or Trend? 2</title>
+<style>
+  :root {
+    --accent: #3b82f6;
+    --success: #2ecc71;
+    --glass: rgba(255,255,255,0.13);
+    --glass-border: rgba(255,255,255,0.20);
+    --input-bg: rgba(255,255,255,0.24);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: url('bg1o4.jpg') center/cover fixed no-repeat;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-image 0.8s ease;
+  }
+
+  .logo {
+    width: clamp(180px, 45vw, 220px);
+    margin: 32px auto 20px;
+    filter: drop-shadow(0 10px 28px rgba(0,0,0,0.55));
+    transition: transform 0.3s ease;
+  }
+  .logo:hover { transform: scale(1.04); }
+
+  .progress {
+    font-size: clamp(1.2rem, 5vw, 1.45rem);
+    font-weight: 700;
+    margin: 12px 0 28px;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+  }
+
+  .card {
+    width: 90%;
+    max-width: 680px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: clamp(20px, 5vw, 32px) 24px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    margin-bottom: 40px;
+    animation: fadeUp 0.5s ease-out;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-label {
+    font-size: 1.05rem;
+    font-weight: 500;
+    opacity: 0.92;
+    margin-bottom: 8px;
+  }
+
+  textarea.input,
+  input.input {
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 14px;
+    background: var(--input-bg);
+    color: #111;
+    font-size: 1.03rem;
+    margin-bottom: 14px;
+    transition: all 0.22s ease;
+  }
+  textarea.input {
+    min-height: 70px;
+    resize: vertical;
+  }
+  input.input:focus,
+  textarea.input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.4);
+    background: rgba(255,255,255,0.32);
+  }
+
+  .option-wrapper {
+    position: relative;
+    margin-bottom: 14px;
+  }
+
+  .option-label {
+    font-size: 0.92rem;
+    opacity: 0.85;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .selectable-input {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .selectable-input.selected {
+    background: rgba(46,204,113,0.48) !important;
+    color: white !important;
+    border: 2px solid #2ecc71;
+    box-shadow: 0 0 0 4px rgba(46,204,113,0.3);
+    transform: scale(1.015);
+  }
+
+  #bottomMessage {
+    text-align: center;
+    font-size: clamp(0.95rem, 4vw, 1.05rem);
+    font-weight: 500;
+    margin: 20px 0 12px;
+    min-height: 1.4em;
+    opacity: 0.9;
+  }
+
+  #shareContainer {
+    display: none;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    padding: 44px 28px;
+    background: var(--glass);
+    backdrop-filter: blur(22px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+    animation: fadeIn 0.6s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  #shareContainer h2 {
+    margin: 0 0 28px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  }
+
+  #shareLink {
+    background: rgba(0,0,0,0.4);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin: 24px 0 32px;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    word-break: break-all;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .action-btn {
+    width: 100%;
+    max-width: 380px;
+    margin: 14px auto;
+    padding: 16px;
+    font-size: 1.14rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #copyBtn { background: #10b981; }
+  #copyBtn:hover { background: #059669; transform: translateY(-2px); }
+
+  #systemShareBtn { background: #8b5cf6; }
+  #systemShareBtn:hover { background: #7c3aed; transform: translateY(-2px); }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .card { padding: 24px 18px; }
+    textarea.input, input.input { font-size: 0.98rem; padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<img src="fotlogo.png" class="logo" id="logoImg" alt="Logo">
+
+<div class="progress" id="progress">Question 1 of 15</div>
+
+<div class="card" id="card">
+  <div class="question-label">Your Question</div>
+  <textarea id="qInput" class="input" rows="2" placeholder="Type your question here..."></textarea>
+
+  <div class="label-wrapper">
+    <div class="option-label">Option A</div>
+    <div class="option-wrapper">
+      <input id="opt1" class="input selectable-input" placeholder="Option A">
+    </div>
+
+    <div class="option-label">Option B</div>
+    <div class="option-wrapper">
+      <input id="opt2" class="input selectable-input" placeholder="Option B">
+    </div>
+
+    <div class="option-label">Option C</div>
+    <div class="option-wrapper">
+      <input id="opt3" class="input selectable-input" placeholder="Option C">
+    </div>
+
+    <div class="option-label">Option D</div>
+    <div class="option-wrapper">
+      <input id="opt4" class="input selectable-input" placeholder="Option D">
+    </div>
+  </div>
+
+  <div id="bottomMessage">Fill all fields to continue</div>
+
+  <div id="shareContainer">
+    <h2>Your Test is Ready! 🎉</h2>
+    <div id="shareLink"></div>
+    <button id="copyBtn" class="action-btn">Copy Link</button>
+    <button id="systemShareBtn" class="action-btn">Share via…</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, collection } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDyaA1svxgvFEgMNsQjQCQRnb5xvdxN7zs",
+    authDomain: "friendortrend.firebaseapp.com",
+    projectId: "friendortrend",
+    storageBucket: "friendortrend.firebasestorage.app",
+    messagingSenderId: "459799712120",
+    appId: "1:459799712120:web:2220249913e4dc91c4b88d",
+    measurementId: "G-SWW3YSJ162"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const creatorName = localStorage.getItem("creatorName") || "Someone";
+
+  let index = 0;
+  const total = 15;
+  const results = [];
+
+  const logoImg       = document.getElementById("logoImg");
+  const progress      = document.getElementById("progress");
+  const qInput        = document.getElementById("qInput");
+  const opt1          = document.getElementById("opt1");
+  const opt2          = document.getElementById("opt2");
+  const opt3          = document.getElementById("opt3");
+  const opt4          = document.getElementById("opt4");
+  const opts          = [opt1, opt2, opt3, opt4];
+  const bottomMessage = document.getElementById("bottomMessage");
+  const shareContainer = document.getElementById("shareContainer");
+  const shareLinkDiv  = document.getElementById("shareLink");
+  const copyBtn       = document.getElementById("copyBtn");
+  const systemShareBtn = document.getElementById("systemShareBtn");
+
+  function updateProgress() {
+    progress.textContent = `Question ${index + 1} of ${total}`;
+  }
+
+  function isReady() {
+    return qInput.value.trim() !== "" && opts.every(el => el.value.trim() !== "");
+  }
+
+  function updateState() {
+    const ready = isReady();
+
+    if (ready) {
+      bottomMessage.textContent = "Tap the correct option below";
+      opts.forEach(el => el.readOnly = false);
+    } else {
+      bottomMessage.textContent = "Fill all fields to continue";
+      opts.forEach(el => {
+        el.readOnly = false; 
+        el.classList.remove("selected");
+      });
+    }
+  }
+
+  function handleSelect(e) {
+    if (!isReady()) return;
+
+    const selected = e.target;
+    if (!opts.includes(selected)) return;
+
+    opts.forEach(el => el.classList.remove("selected"));
+    selected.classList.add("selected");
+
+    const correctIndex = opts.indexOf(selected);
+
+    setTimeout(() => {
+      results.push({
+        question: qInput.value.trim(),
+        options: opts.map(el => el.value.trim()),
+        correctIndex
+      });
+
+      if (index === total - 1) {
+        finalize();
+      } else {
+        next();
+      }
+    }, 480);
+  }
+
+  function next() {
+    index++;
+    updateProgress();
+    qInput.value = "";
+    opts.forEach(el => {
+      el.value = "";
+      el.classList.remove("selected");
+      el.readOnly = false;
+    });
+    updateState();
+  }
+
+  async function finalize() {
+    const quizRef = doc(collection(db, "quizzes"));
+    await setDoc(quizRef, {
+      creatorName,
+      questions: results,
+      createdAt: Date.now()
+    });
+
+    const link = `${location.protocol}//${location.host}/domytest.html?quizID=${quizRef.id}`;
+
+    document.body.style.backgroundImage = "url('bg1o4o1.jpg')";
+    logoImg.src = "logo.png";
+    logoImg.alt = "Final Logo";
+
+    document.getElementById("card").classList.add("hidden");
+    progress.classList.add("hidden");
+    shareLinkDiv.textContent = link;
+    shareContainer.style.display = "block";
+
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(link).then(() => alert("Link copied!"));
+    };
+
+    systemShareBtn.onclick = async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Do my Friend or Trend test",
+            text: "Try my test 👇",
+            url: link
+          });
+        } catch {}
+      } else {
+        alert("Copy the link to share.");
+      }
+    };
+  }
+
+  // Events
+  [qInput, ...opts].forEach(el => {
+    el.addEventListener("input", updateState);
+  });
+
+  opts.forEach(el => {
+    el.addEventListener("click", handleSelect);
+  });
+
+  updateProgress();
+  updateState();
+</script>
+</body>
+</html>

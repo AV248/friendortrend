@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friend Or Trend? 2</title>
+<style>
+  :root {
+    --accent: #3b82f6;
+    --accent-dark: #2563eb;
+    --glass-bg: rgba(255, 255, 255, 0.13);
+    --glass-border: rgba(255, 255, 255, 0.18);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: url('bg1o4.jpg') center/cover fixed no-repeat;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-image 0.8s ease-in-out;
+  }
+
+  .logo {
+    width: clamp(240px, 55vw, 320px);
+    margin: 40px auto 24px;
+    filter: drop-shadow(0 12px 32px rgba(0,0,0,0.6)) brightness(1.08);
+    transition: transform 0.4s ease, opacity 0.6s ease;
+  }
+  .logo:hover { transform: scale(1.06); }
+
+  .progress {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 12px 0 32px;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.7);
+    letter-spacing: 0.6px;
+    position: relative;
+    padding-bottom: 8px;
+  }
+  .progress::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 4px;
+    background: var(--accent);
+    border-radius: 4px; opacity: 0.7;
+  }
+
+  .card {
+    width: 92%;
+    max-width: 680px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 32px 26px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08);
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s ease-out;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-text {
+    font-size: 1.55rem;
+    font-weight: 600;
+    line-height: 1.42;
+    margin-bottom: 32px;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.6);
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .option {
+    padding: 18px 24px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.18);
+    border: 2px solid transparent;
+    transition: all 0.32s ease;
+    font-weight: 600;
+    font-size: 1.14rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  }
+
+  .option:hover {
+    background: rgba(255,255,255,0.28);
+    transform: translateY(-3px) scale(1.015);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+  }
+
+  .option.selected {
+    background: rgba(59, 130, 246, 0.42);
+    border-color: var(--accent);
+    color: white;
+    transform: scale(1.03);
+    box-shadow: 0 10px 24px rgba(59,130,246,0.35);
+  }
+
+  #result-screen {
+    display: none;
+    text-align: center;
+    width: 90%;
+    max-width: 620px;
+    padding: 48px 28px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(22px);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    animation: fadeIn 0.7s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; scale: 0.96; }
+    to   { opacity: 1; scale: 1; }
+  }
+
+  #result-screen h2 {
+    margin: 0 0 32px;
+    font-size: 2.4rem;
+    font-weight: 800;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.7);
+  }
+
+  #share-link-container {
+    background: rgba(0,0,0,0.38);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin: 28px 0 36px;
+    font-size: 1rem;
+    line-height: 1.6;
+    word-break: break-all;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .big-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+    margin: 16px auto;
+    padding: 18px 24px;
+    font-size: 1.22rem;
+    font-weight: 700;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    color: white;
+  }
+
+  .btn-copy { background: linear-gradient(135deg, #10b981, #059669); }
+  .btn-copy:hover { background: linear-gradient(135deg, #059669, #047857); transform: translateY(-3px); box-shadow: 0 12px 28px rgba(16,185,129,0.4); }
+
+  .btn-share { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+  .btn-share:hover { background: linear-gradient(135deg, #7c3aed, #6d28d9); transform: translateY(-3px); box-shadow: 0 12px 28px rgba(139,92,246,0.4); }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 500px) {
+    .card { padding: 24px 18px; }
+    .question-text { font-size: 1.38rem; }
+    .option { font-size: 1.06rem; padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<img src="fotlogo.png" class="logo" id="logoImage" alt="Logo" />
+
+<div class="progress" id="progressText">Question 1 of 15</div>
+
+<div class="card" id="quizCard">
+  <div class="question-text" id="questionText"></div>
+  <div class="options-grid" id="optionsGrid"></div>
+</div>
+
+<div id="result-screen">
+  <h2>Test Ready! 🎉</h2>
+  <div id="share-link-container"></div>
+  <button class="big-btn btn-copy" id="copyBtn">📋 Copy Link</button>
+  <button class="big-btn btn-share" id="systemShareBtn">↗️ Share via…</button>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, collection } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDyaA1svxgvFEgMNsQjQCQRnb5xvdxN7zs",
+    authDomain: "friendortrend.firebaseapp.com",
+    projectId: "friendortrend",
+    storageBucket: "friendortrend.firebasestorage.app",
+    messagingSenderId: "459799712120",
+    appId: "1:459799712120:web:2220249913e4dc91c4b88d",
+    measurementId: "G-SWW3YSJ162"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const creatorName = localStorage.getItem("creatorName") || "Someone";
+
+  const questions = [
+    { q: `${creatorName} is a`, o: ["Introvert","Extrovert","Ex-in-trovert","Vertless"] },
+    { q: `${creatorName}'s fav food is`, o: ["Pizza","Air-fried Broccoli","4X plates KFC ONLY/-","None of the above"] },
+    { q: `${creatorName} is`, o: ["Funny","Aggressive","Nonchalant","All of the above"] },
+    { q: `${creatorName} is smart!`, o: ["Might be a little","No","Definitely No","YES"] },
+    { q: `Enjoying "Friend Or Trend 2"?`, o: ["Yes ofc such a talented creator","Definitely Yes","Yup","Yeah"] },
+    { q: `${creatorName}'s laugh sounds like`, o: ["Cute giggle","Hyena mode","Silent wheeze","Car engine"] },
+    { q: `${creatorName} prefers`, o: ["Dogs","Cats","Birds","Robots"] },
+    { q: `${creatorName}'s fav drink`, o: ["Coke","Milkshake","Iced Tea","Just Water"] },
+    { q: `${creatorName} sleeps at`, o: ["9 PM","12 AM","3 AM","Sleep is a myth"] },
+    { q: `${creatorName} types`, o: ["Slow","Fast","Aggressively","With toes (??)"] },
+    { q: `${creatorName} hates`, o: ["Loud chewers","Slow WiFi","Spoilers","All of these"] },
+    { q: `${creatorName} would pick`, o: ["Beach","Mountains","City","Desert"] },
+    { q: `${creatorName} watches`, o: ["Anime","Sitcoms","News","Random YT shorts"] },
+    { q: `${creatorName} would rather`, o: ["Fly","Be invisible","Read minds","Teleport"] },
+    { q: `How would you rate Friend Or Trend 2?`, o: ["⭐ ⭐","⭐ ⭐ ⭐","⭐ ⭐ ⭐ ⭐","⭐ ⭐ ⭐ ⭐ ⭐"] }
+  ];
+
+  let index = 0;
+  const results = [];
+
+  const logoImage       = document.getElementById("logoImage");
+  const progressText    = document.getElementById("progressText");
+  const questionText    = document.getElementById("questionText");
+  const optionsGrid     = document.getElementById("optionsGrid");
+  const quizCard        = document.getElementById("quizCard");
+  const resultScreen    = document.getElementById("result-screen");
+  const shareLinkDiv    = document.getElementById("share-link-container");
+  const copyBtn         = document.getElementById("copyBtn");
+  const systemShareBtn  = document.getElementById("systemShareBtn");
+
+  function loadQuestion() {
+    progressText.textContent = `Question ${index + 1} of ${questions.length}`;
+    questionText.textContent = questions[index].q;
+
+    optionsGrid.innerHTML = "";
+    questions[index].o.forEach((opt, i) => {
+      const div = document.createElement("div");
+      div.className = "option";
+      div.textContent = opt;
+      div.onclick = () => handleSelection(i);
+      optionsGrid.appendChild(div);
+    });
+  }
+
+  function handleSelection(selectedIndex) {
+    results.push({
+      question: questions[index].q,
+      options: questions[index].o,
+      selectedIndex: selectedIndex
+    });
+
+    const opts = optionsGrid.querySelectorAll(".option");
+    opts.forEach(o => o.classList.remove("selected"));
+    opts[selectedIndex].classList.add("selected");
+
+    setTimeout(() => {
+      if (index === questions.length - 1) {
+        showResultScreen();
+      } else {
+        index++;
+        loadQuestion();
+      }
+    }, 480);
+  }
+
+  async function showResultScreen() {
+    const quizRef = doc(collection(db, "quizzes"));
+    await setDoc(quizRef, {
+      creatorName,
+      questions: results,
+      createdAt: Date.now()
+    });
+
+    const link = `https://friendortrend.vercel.app/domytest.html?quizID=${quizRef.id}`;
+
+    // ── Final screen changes ───────────────────────────────
+    quizCard.classList.add("hidden");
+    progressText.classList.add("hidden");
+    document.body.style.backgroundImage = "url('bg1o4o2.jpg')";
+    logoImage.src = "logo.png";               // ← logo change here
+    logoImage.alt = "Final Logo";
+
+    shareLinkDiv.textContent = link;
+    resultScreen.style.display = "block";
+
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(link).then(() => alert("Link copied!"));
+    };
+
+    systemShareBtn.onclick = async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: "Do my Friend or Trend test",
+            text: "Try my test 👇",
+            url: link
+          });
+        } catch {}
+      } else {
+        alert("Copy the link above to share!");
+      }
+    };
+  }
+
+  loadQuestion();
+</script>
+</body>
+</html>

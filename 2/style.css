@@ -1,0 +1,86 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: url('bg1o1.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  backdrop-filter: brightness(0.9);
+}
+
+.logo {
+  width: 300px;
+  max-width: 80%;
+  margin-bottom: 40px;
+  animation: fadeInDown 1s ease-out;
+}
+
+.quiz-button {
+padding: 15px 40px;
+font-size: 1.2em;
+font-weight: bold;
+color: #fff;
+border-radius: 50px;
+text-decoration: none;
+
+/* Premium gradient fill + gradient border */
+border: 1.5px solid transparent;
+background:
+linear-gradient(180deg, #ff5a3a 0%, #ff3b1c 100%) padding-box,
+linear-gradient(135deg, #ffe2db, #ff9078, #ff4b2b) border-box;
+
+/* Subtle depth */
+box-shadow:
+0 8px 16px rgba(0, 0, 0, 0.25),
+inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+animation: fadeInUp 1s ease-out;
+}
+
+.quiz-button:hover {
+transform: translateY(-2px);
+box-shadow:
+0 12px 24px rgba(0, 0, 0, 0.28),
+inset 0 1px 0 rgba(255, 255, 255, 0.25);
+background:
+linear-gradient(180deg, #ff6a4f 0%, #ff2f14 100%) padding-box,
+linear-gradient(135deg, #fff0ec, #ffab96, #ff5a3a) border-box;
+}
+
+.quiz-button:active {
+transform: translateY(0) scale(0.99);
+box-shadow:
+0 6px 12px rgba(0, 0, 0, 0.22),
+inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.quiz-button:focus-visible {
+outline: none;
+box-shadow:
+0 0 0 3px rgba(255, 90, 58, 0.35),
+0 8px 16px rgba(0, 0, 0, 0.25),
+inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.quiz-button:hover {
+  background: #ff6f61;
+  transform: scale(1.05);
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

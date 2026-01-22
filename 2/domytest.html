@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friend Or Trend? 2</title>
+<style>
+  :root {
+    --accent: #3b82f6;
+    --accent2: #2563eb;
+    --glass: rgba(255, 255, 255, 0.10);
+    --glass-border: rgba(255, 255, 255, 0.24);
+    --text-main: #f8fafc;
+    --text-dim: #cbd5e1;
+    --shadow: 0 18px 50px rgba(0,0,0,0.55);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: url('bg1o5.jpg') center/cover fixed no-repeat;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .logo {
+    width: clamp(180px, 45vw, 260px);
+    margin: 48px auto 32px;
+    filter: drop-shadow(0 10px 32px rgba(0,0,0,0.6));
+    transition: 0.3s;
+  }
+  .logo:hover {
+    transform: scale(1.05) translateY(-4px);
+  }
+
+  .card {
+    width: 92%;
+    max-width: 750px;
+    background: var(--glass);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    padding: clamp(26px, 6vw, 42px);
+    border-radius: 28px;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.1);
+    animation: fadeUp 0.55s ease-out;
+    text-align: center;
+    margin: 0 18px 42px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .title {
+    font-size: clamp(1.9rem, 6vw, 2.4rem);
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+  }
+
+  .input {
+    width: 100%;
+    padding: 16px 18px;
+    font-size: 1.12rem;
+    border-radius: 18px;
+    border: none;
+    text-align: center;
+    background: rgba(255,255,255,0.25);
+    color: #0f172a;
+    margin-top: 12px;
+    outline: none;
+    transition: 0.28s;
+  }
+  .input:focus {
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.35);
+    background: rgba(255,255,255,0.32);
+  }
+
+  .btn {
+    margin-top: 24px;
+    width: 100%;
+    max-width: 360px;
+    padding: 16px;
+    border: none;
+    border-radius: 48px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: white;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 10px 28px rgba(59,130,246,0.4);
+    transition: 0.3s;
+  }
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 36px rgba(59,130,246,0.55);
+  }
+
+  .progress {
+    font-size: clamp(1.3rem, 4vw, 1.6rem);
+    font-weight: 700;
+    margin-bottom: 28px;
+    letter-spacing: -0.3px;
+    position: relative;
+  }
+
+  .progress::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--accent);
+    opacity: 0.85;
+  }
+
+  .question {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.42;
+    margin: 34px 0;
+  }
+
+  .option {
+    width: 100%;
+    padding: 18px 22px;
+    font-size: 1.08rem;
+    margin-bottom: 14px;
+    border-radius: 18px;
+    border: 2px solid transparent;
+    background: rgba(255,255,255,0.12);
+    color: white;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+    transition: 0.3s;
+  }
+
+  .option:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.38);
+  }
+
+  .option.selected {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(59,130,246,0.4), rgba(59,130,246,0.25));
+    box-shadow: 0 12px 30px rgba(59,130,246,0.45);
+    transform: scale(1.015);
+  }
+
+</style>
+</head>
+<body>
+
+<img src="fotlogo.png" class="logo" alt="Logo">
+
+<div id="content" class="card"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDyaA1svxgvFEgMNsQjQCQRnb5xvdxN7zs",
+    authDomain: "friendortrend.firebaseapp.com",
+    projectId: "friendortrend",
+    storageBucket: "friendortrend.firebasestorage.app",
+    messagingSenderId: "459799712120",
+    appId: "1:459799712120:web:2220249913e4dc91c4b88d",
+    measurementId: "G-SWW3YSJ162"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const content = document.getElementById("content");
+  const params = new URLSearchParams(location.search);
+  const quizID = params.get("quizID");
+
+  let playerName = "";
+  let questions = [];
+  let index = 0;
+  let score = 0;
+  let canClick = true;
+
+  function askNameUI() {
+    content.innerHTML = `
+      <div class="title">Welcome!</div>
+      <div class="subtitle">Enter your name to attempt the test</div>
+      <input id="nameInput" class="input" placeholder="Your name...">
+      <button id="startBtn" class="btn">Start Test</button>
+    `;
+
+    document.getElementById("startBtn").onclick = () => {
+      const name = document.getElementById("nameInput").value.trim();
+      if (!name) return alert("Please enter your name.");
+      playerName = name;
+      loadQuizData();
+    };
+  }
+
+  async function loadQuizData() {
+    const ref = doc(db, "quizzes", quizID);
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) {
+      content.innerHTML = "<h2>Quiz not found!</h2>";
+      return;
+    }
+
+    questions = snap.data().questions;
+    showQuestion();
+  }
+
+  function showQuestion() {
+    const q = questions[index];
+    content.innerHTML = `
+      <div class="progress">Question ${index + 1} of ${questions.length}</div>
+      <div class="question">${q.question}</div>
+      ${q.options.map((o,i)=>`<button class="option" data-i="${i}">${o}</button>`).join("")}
+    `;
+
+    document.querySelectorAll(".option").forEach(btn => {
+      btn.onclick = () => {
+        if (!canClick) return;
+        canClick = false;
+
+        btn.classList.add("selected");
+        if (parseInt(btn.dataset.i) === q.correctIndex) score++;
+
+        setTimeout(nextStep, 450);
+      };
+    });
+  }
+
+  function nextStep() {
+    if (index === questions.length - 1) {
+      saveAttempt();
+    } else {
+      index++;
+      canClick = true;
+      showQuestion();
+    }
+  }
+
+  async function saveAttempt() {
+    await addDoc(collection(db, "quizzes", quizID, "attempts"), {
+      playerName,
+      score,
+      total: questions.length,
+      takenAt: Date.now()
+    });
+
+    window.location.href = `leaderboard.html?quizID=${quizID}&player=${encodeURIComponent(playerName)}`;
+  }
+
+  askNameUI();
+</script>
+
+</body>
+</html>
